@@ -43,11 +43,14 @@ def clone_repository(repo):
     return None
 
 def clone_repositories(file_url):
-    response = requests.get(file_url)
-    if response.status_code == 200:
-        repositories = response.text.strip().split('\n')
-    else:
-        print('Failed to retrieve Repo List from the server.')
+    try:
+        with open(file_url, 'r') as file:
+            repositories = file.read().strip().split('\n')
+    except FileNotFoundError:
+        print(f"File not found: {file_url}")
+        return
+    except Exception as e:
+        print(f"Error reading file: {e}")
         return
 
     total_repos = len(repositories)
@@ -141,7 +144,7 @@ def summarize_templates():
     print(table)
 
 
-file_url = 'https://raw.githubusercontent.com/AggressiveUser/AllForOne/main/PleaseUpdateMe.txt'
+file_url = "nuclei_templates.txt"
 
 clone_repositories(file_url)
 
